@@ -154,11 +154,15 @@ def select_thompson_bernoulli(successes: np.ndarray, failures: np.ndarray,
 
     samples = rng.beta(1 + successes, 1 + failures)
 
-    max = 0
+    """max = 0
     for k in range(1, samples.size):
         max = k if samples[k] > samples[max] else max
     
     return max
+    """
+    return np.argmax(samples)
+
+    
 
 
 # --------------------------------------------------------------------------- #
