@@ -34,8 +34,8 @@ def posterior_mean(alpha: np.ndarray, beta: np.ndarray) -> np.ndarray:
     succession. That smoothing is why a single click does not make an arm look
     perfect.
     """
-    # TODO: return ...
-    raise NotImplementedError
+
+    return alpha / (alpha + beta)
 
 
 def posterior_variance(alpha: np.ndarray, beta: np.ndarray) -> np.ndarray:
@@ -47,8 +47,8 @@ def posterior_variance(alpha: np.ndarray, beta: np.ndarray) -> np.ndarray:
     evidence accumulates, and Part B shows that **it is the exploration**: an
     agent that keeps the mean and throws the variance away stops exploring.
     """
-    # TODO: return ...
-    raise NotImplementedError
+
+    return (alpha * beta) / ((alpha + beta) ** 2 * (alpha + beta + 1))
 
 
 def posterior_update(alpha: float, beta: float, reward: int) -> tuple[float, float]:
@@ -57,9 +57,10 @@ def posterior_update(alpha: float, beta: float, reward: int) -> tuple[float, flo
     $$\mathrm{Beta}(\alpha,\beta) \xrightarrow{\ r=1\ } \mathrm{Beta}(\alpha+1,\beta),
       \qquad \xrightarrow{\ r=0\ } \mathrm{Beta}(\alpha,\beta+1).$$
     """
-    # TODO: return ...
-    raise NotImplementedError
 
+    return ((alpha + reward),(beta + (1 - reward)))
+
+    
 
 # --------------------------------------------------------------------------- #
 # Q2: acting on a posterior
