@@ -94,7 +94,7 @@ def select_posterior_greedy(alphas: np.ndarray, betas: np.ndarray,
     it. Ties: lowest index.
     """
     
-    return np.argmax(alphas[state] / (alphas[state] + betas[state])) # try to delete [state] for debugging
+    return np.argmax(alphas[state] / (alphas[state] + betas[state]) + posterior_variance(alphas[state], betas[state]))
 
 
 # --------------------------------------------------------------------------- #

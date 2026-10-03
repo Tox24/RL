@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 """P02 Part B — the theorem made visible: the posterior variance *is* the
 exploration, and it shows up in the tail, not in the average.
@@ -36,7 +37,7 @@ CTR = np.array([
     [0.30, 0.20, 0.03],   # AI engineer
     [0.08, 0.30, 0.05],   # management engineer
     [0.05, 0.10, 0.10],   # high school kid
-])
+]) * 2
 CONTEXTS = ["AI engineer", "management engineer", "high-school kid"]
 COURSES = ["RL course", "optimisation course", "trading course"]
 HORIZON = 3000
