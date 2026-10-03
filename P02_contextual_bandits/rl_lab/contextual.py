@@ -78,8 +78,8 @@ def select_thompson(alphas: np.ndarray, betas: np.ndarray, state: int,
     data, which is why exploration fades on its own as the posteriors sharpen.
     Ties: lowest index.
     """
-    # TODO: ...
-    raise NotImplementedError
+    
+    return np.argmax(rng.beta(alphas[state], betas[state]))
 
 
 def select_posterior_greedy(alphas: np.ndarray, betas: np.ndarray,
@@ -93,8 +93,8 @@ def select_posterior_greedy(alphas: np.ndarray, betas: np.ndarray,
     mean happens to look bad early. Predict what its regret does before you run
     it. Ties: lowest index.
     """
-    # TODO: return ...
-    raise NotImplementedError
+    
+    return np.argmax(alphas[state] / (alphas[state] + betas[state])) # try to delete [state] for debugging
 
 
 # --------------------------------------------------------------------------- #
@@ -113,9 +113,8 @@ def contextual_regret(ctr: np.ndarray, states: np.ndarray,
     them still pays linear regret, and that is the whole reason the context
     belongs in the state.
     """
-    # TODO: return ...
-    raise NotImplementedError
 
+    return np.sum(np.max(ctr[states],axis=1) - ctr[states,actions])
 
 # --------------------------------------------------------------------------- #
 # The interaction loop (given: you do not need to modify it)
