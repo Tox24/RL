@@ -2,3 +2,7 @@ For the part C I have predicted that:
 
 1. The posterior greedy should got worse because if ctr is multiplicated by two also the difference between the best arm and the suboptimal arm is duplicated and so the regret is duplicated too. It could be that the regret does not duplicate because some suboptimal arm may become optimal given the cap to $0.95$. Furthermore there is no more prior's optimism because the true means are higher than the starting mean so the model will tend to commit to an arm that is pulled the most even if it is suboptimal.
 2. The greedy has now a mechanism to reconsider past action avoiding starvation on a suboptimal arm. It is reinventing the UCB.
+
+After running the experiment I have observed that my predictions were correct.
+Posterior greedy median decreased from $10.4$ to $5.6$ but it's p90 increased from $105.4$ to $199.4$ because ctr was duplicated ($104.5$ without duplicating ctr). It is also possible to confirm this statement from [[regret_partc.png]] where the tail is visibly reduced, meaning that the non-optimal run have been reduced.
+This observation confirms either the first prediction, in fact p90 increased, meaning that the worst case has gotten worse; and that starvation on a suboptimal arm is been reduced, confirmed by the graph where we can observe the tail.
