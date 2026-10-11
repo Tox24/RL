@@ -68,8 +68,8 @@ def greedy_policy(P: np.ndarray, R: np.ndarray, V: np.ndarray,
     greedy policy with respect to $V^{*}$ **is** optimal — which is why value
     iteration can ignore policies until the very last step.
     """
-    # TODO: return ...
-    raise NotImplementedError
+
+    return np.argmax(R + gamma * np.dot(P, V), axis=1)
 
 
 # --------------------------------------------------------------------------- #
@@ -90,8 +90,11 @@ def policy_evaluation_exact(P: np.ndarray, R: np.ndarray, pi: np.ndarray,
     This costs $O(|\mathcal{S}|^3)$, which is exactly why value iteration exists.
     Here it is the ground truth the iterative methods are checked against.
     """
-    # TODO: return ...
-    raise NotImplementedError
+
+    states = np.arange(pi.size)
+    n_states = int(pi.size)
+
+    return np.dot(np.linalg.inv((np.identity(n_states) - gamma * P[states, pi])), R[states, pi])
 
 
 def value_iteration(P: np.ndarray, R: np.ndarray, gamma: float,
@@ -104,8 +107,18 @@ def value_iteration(P: np.ndarray, R: np.ndarray, gamma: float,
     look at how the error shrinks, and for that you need the trace, not just the
     answer.
     """
-    # TODO: ...
-    raise NotImplementedError
+    S = int(R[:,0].size)
+
+    V = np.zeros(S) if V0 is None else V0
+    history = np.zeros((iters + 1, S))
+
+    history[0] = V
+
+    for i in range (1, iters + 1):
+        history[i] = bellman_optimality(P, R, history[i-1], gamma)
+        V = np.copy(history[i])
+
+    return (V, history)
 
 
 # --------------------------------------------------------------------------- #
@@ -113,8 +126,8 @@ def value_iteration(P: np.ndarray, R: np.ndarray, gamma: float,
 # --------------------------------------------------------------------------- #
 def sup_norm(a: np.ndarray, b: np.ndarray) -> float:
     r"""$\lVert a - b \rVert_\infty$: the norm every contraction argument uses."""
-    # TODO: return ...
-    raise NotImplementedError
+
+    return np.max(np.abs(a - b))
 
 
 def error_ratios(history: np.ndarray, v_star: np.ndarray) -> np.ndarray:
@@ -131,5 +144,16 @@ def error_ratios(history: np.ndarray, v_star: np.ndarray) -> np.ndarray:
     grid the error becomes exactly zero after a few sweeps, and keeping those
     ratios would give $0/x = 0$ and then $0/0$.
     """
-    # TODO: ...
-    raise NotImplementedError
+    k = history[:,0].size
+
+    rho = []
+
+    for i in range(0,k-1):
+        den = sup_norm(history[i], v_star)
+        num = sup_norm(history[i+1], v_star)
+
+        if den >= 1e-12 and num >= 1e-12:
+            rho.append(num/den)
+
+
+    return np.array(rho)
