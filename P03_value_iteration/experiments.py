@@ -89,7 +89,8 @@ def main() -> int:
         ratios = error_ratios(history, V)
         reached = np.argmax(errs < 1e-6) if (errs < 1e-6).any() else -1
         gap = abs(ratios[-10:] - gamma).max()
-        print(f"  {gamma:6.2f} {reached:15d} {1/(1-gamma):13.1f} "
+        horizon = 1 / (1 - gamma) if gamma < 1.0 else float("inf")
+        print(f"  {gamma:6.2f} {reached:15d} {horizon:13.1f} "
               f"{ratios[-1]:13.9f} {gap:16.2e}")
         data[gamma] = (errs, ratios)
 
