@@ -35,8 +35,10 @@ def advantage(P: np.ndarray, R: np.ndarray, pi: np.ndarray,
     the first thing the tests check: an action you are already taking cannot be
     an improvement on itself.
     """
-    # TODO: ...
-    raise NotImplementedError
+
+    V = policy_evaluation_exact(P, R, pi, gamma)
+
+    return q_from_v(P, R, V, gamma) - V.reshape(-1,1)
 
 
 def policy_improvement(P: np.ndarray, R: np.ndarray, pi: np.ndarray,
@@ -52,8 +54,11 @@ def policy_improvement(P: np.ndarray, R: np.ndarray, pi: np.ndarray,
     loop can alternate between them for ever; the rule is what makes "the policy
     stopped changing" a reliable stopping rule.
     """
-    # TODO: ...
-    raise NotImplementedError
+
+    A = advantage(P, R, pi, gamma)
+    
+    improved = A.max(axis=1) > 1e-12
+    return np.where(improved, np.argmax(A, axis=1), pi)
 
 
 # --------------------------------------------------------------------------- #
@@ -72,8 +77,26 @@ def policy_iteration(P: np.ndarray, R: np.ndarray, gamma: float,
     $\pi$ is greedy with respect to its own value, which is the Bellman
     optimality equation, so $V^\pi = V^{*}$.
     """
-    # TODO: ...
-    raise NotImplementedError
+
+    if pi0 is None:
+        pi = np.zeros(P.shape[0], dtype=int)
+    else:
+        pi = pi0.copy()
+
+    # Track values of every policy visited, starting with pi0
+    values = [policy_evaluation_exact(P, R, pi, gamma)]
+
+    for _ in range(max_iters):
+        new_pi = policy_improvement(P, R, pi, gamma)
+        
+        # Stop as soon as the policy does not change
+        if np.array_equal(new_pi, pi):
+            break
+            
+        pi = new_pi
+        values.append(policy_evaluation_exact(P, R, pi, gamma))
+
+    return pi, np.array(values)
 
 
 # --------------------------------------------------------------------------- #
@@ -88,9 +111,10 @@ def is_monotone(values: np.ndarray, tol: float = 1e-9) -> bool:
     is better on average but worse somewhere is not an improvement, and policy
     iteration never produces one.
     """
-    # TODO: return ...
-    raise NotImplementedError
 
+    return bool(np.all(np.diff(values, axis=0) >= -tol))
+
+  
 
 def n_distinct_policies(P: np.ndarray, R: np.ndarray, gamma: float,
                         pi0: np.ndarray | None = None) -> int:
@@ -102,5 +126,5 @@ def n_distinct_policies(P: np.ndarray, R: np.ndarray, gamma: float,
     what "terminates in finitely many steps" means, and it is the property value
     iteration does not have.
     """
-    # TODO: return ...
-    raise NotImplementedError
+
+    return len(policy_iteration(P, R, gamma, pi0)[1])
